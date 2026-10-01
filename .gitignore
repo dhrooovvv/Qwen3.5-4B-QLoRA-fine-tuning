@@ -1,0 +1,32 @@
+.venv/
+__pycache__/
+*.py[cod]
+.env
+dataset/
+*.safetensors
+*.bin
+*.pt
+*.pth
+hf_cache/
+.cache/huggingface/
+.cache/
+.DS_Store
+
+# Keep logs and results as submission deliverables; ignore generated contents only.
+logs/*
+!logs/.gitkeep
+results/*
+!results/.gitkeep
+
+# Keep small LoRA adapters reviewable; ignore full model checkpoints.
+weights/*
+!weights/.gitkeep
+!weights/**/*.safetensors
+!weights/**/adapter_model.safetensors
+!weights/**/*.json
+!weights/**/*.txt
+!weights/**/*.md
+tensorboard/
+events.out.tfevents.*
+tmp/
+temp/

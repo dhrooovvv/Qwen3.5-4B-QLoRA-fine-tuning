@@ -1,0 +1,5 @@
+{
+  "status": "placeholder",
+  "generated_by": "src/prepare.py",
+  "note": "Run the sequence-level split preparation after dataset/ is supplied."
+}

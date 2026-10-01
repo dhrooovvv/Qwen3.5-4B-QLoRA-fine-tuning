@@ -1,0 +1,9 @@
+dataset_path: dataset
+split_path: data/split.json
+model_name: Qwen/Qwen2.5-VL-3B-Instruct
+output_dir: results
+max_image_pixels: 10000000
+max_sequence_length: 4096
+random_seed: 42
+device: auto
+profile: base
