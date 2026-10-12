@@ -1,9 +1,22 @@
 dataset_path: dataset
 split_path: data/split.json
-model_name: Qwen/Qwen2.5-VL-3B-Instruct
+hf_model_name: Qwen/Qwen3.5-4B
+hf_model_revision: null  # Resolved from the cached Hugging Face refs/main file by src/config.py.
 output_dir: results
-max_image_pixels: 10000000
-max_sequence_length: 4096
+adapter_output_dir: weights
+max_pixels: 700000  # Starting point, not tuned; confirm with fit_test.
+max_length: 3152  # p99 total tokens at 700k plus 5% margin.
+num_epochs: 3  # Starting point, not tuned.
+lora_r: 16  # TODO: tune.
+lora_alpha: 16  # TODO: tune.
+learning_rate: 0.0001  # Starting point, not tuned.
+lora_dropout: 0.0  # Starting point, not tuned.
+per_device_batch: 1
+grad_accum: 8
+load_in_4bit: true
+finetune_vision_layers: false
+max_new_tokens: 1008  # p99 target tokens plus 5% margin.
 random_seed: 42
 device: auto
 profile: base
+experiment_name: qwen35_4b

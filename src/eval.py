@@ -11,13 +11,28 @@ from pathlib import Path
 from config import load_config, save_resolved_config
 
 
-def run_scorer(predictions: Path, output: Path, dataset_path: Path) -> None:
+def run_scorer(predictions: Path, references: Path, output: Path, dataset_path: Path) -> None:
     """Delegate scoring to the provided scorer without recreating its logic."""
 
     command = [sys.executable, str(dataset_path / "score.py"),
-               "--references", str(dataset_path / "development/labels.jsonl"),
+               "--references", str(references),
                "--predictions", str(predictions), "--output", str(output)]
     subprocess.run(command, check=True)
+
+
+def write_filtered_references(predictions: Path, references: Path, destination: Path) -> None:
+    """Write original reference rows in prediction order without editing the source."""
+    prediction_rows = [json.loads(line) for line in predictions.read_text(encoding="utf-8").splitlines() if line.strip()]
+    reference_rows = [json.loads(line) for line in references.read_text(encoding="utf-8").splitlines() if line.strip()]
+    reference_map = {row["sequence_id"]: row for row in reference_rows}
+    ids = [row["sequence_id"] for row in prediction_rows]
+    missing = [sequence_id for sequence_id in ids if sequence_id not in reference_map]
+    if missing:
+        raise ValueError(f"Prediction IDs are absent from references: {missing}")
+    destination.write_text(
+        "".join(json.dumps(reference_map[sequence_id], ensure_ascii=False, separators=(",", ":")) + "\n" for sequence_id in ids),
+        encoding="utf-8",
+    )
 
 
 def main() -> None:
@@ -32,7 +47,10 @@ def main() -> None:
     result_dir.mkdir(parents=True, exist_ok=True)
     save_resolved_config(config, result_dir)
     score_path = result_dir / "scores.json"
-    run_scorer(args.predictions, score_path, Path(config.dataset_path))
+    references = Path(config.dataset_path) / "development" / "labels.jsonl"
+    filtered_references = result_dir / "references_filtered.jsonl"
+    write_filtered_references(args.predictions, references, filtered_references)
+    run_scorer(args.predictions, filtered_references, score_path, Path(config.dataset_path))
     with score_path.open("r", encoding="utf-8") as handle:
         json.load(handle)
 

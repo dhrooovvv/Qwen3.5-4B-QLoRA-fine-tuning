@@ -1,15 +1,6 @@
-# Python 3.11; CUDA machine with the PyTorch CUDA wheel index in README.md.
-torch==2.6.0
-transformers==4.49.0
-peft==0.14.0
-trl==0.15.2
-accelerate==1.4.0
-qwen-vl-utils==0.0.10
-pillow==11.1.0
-rapidfuzz==3.12.1
-scikit-learn==1.6.1
-tqdm==4.67.1
-tensorboard==2.19.0
-datasets==3.3.2
-pyyaml==6.0.2
-bitsandbytes==0.45.3
+# Windows RTX 4060 training environment.
+# Use requirements-train.lock.txt and follow its CUDA-first install order.
+# Install torch==2.8.0 and torchvision==0.23.0 from:
+# https://download.pytorch.org/whl/cu128
+# Installing the lock file directly from the default index can replace CUDA
+# torch with a CPU build.

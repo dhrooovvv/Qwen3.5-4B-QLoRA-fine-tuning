@@ -38,9 +38,24 @@ the MPS backend when available.
 - `logs/`, `results/`, `weights/`: future deliverables and artifacts.
 - `docs/`: AI-use and citation records.
 
+## Optional GUI
+
+The local Gradio demo accepts exactly three uploaded pages and runs the saved adapter through `src/infer.py`.
+
+From the project root, run:
+
+```powershell
+.venv312\Scripts\python.exe app_gradio.py
+```
+
+The GUI loads the cached 4-bit base model and adapter at startup. Close notebooks or other processes that hold the model before launching it; an RTX 4060 with 8 GB VRAM may not have enough free memory otherwise. Uploads are kept in Gradio's temporary folder, normally `C:\Users\<username>\AppData\Local\Temp\gradio`; clear that folder after stopping the app if needed.
+
+For a CPU-only UI smoke test that does not load the model, run `.venv312\Scripts\python.exe app_gradio.py --no-model`.
+
 ## TODO
 
 - Inspect the supplied dataset schema.
 - Implement sequence-level preparation.
 - Train and evaluate an adapted local model.
 - Add the final approach, experiments, results, and next steps in this README.
+- Add base-versus-fine-tuned comparison notebook and review its outputs.

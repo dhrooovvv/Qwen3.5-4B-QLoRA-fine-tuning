@@ -17,6 +17,13 @@ logs/*
 !logs/.gitkeep
 results/*
 !results/.gitkeep
+!results/compare_*/
+results/compare_*/*
+!results/compare_*/*.csv
+!results/compare_*/*.json
+!results/compare_*/*.png
+results/compare_*/*predictions*.jsonl
+results/compare_*/*.metadata.json
 
 # Keep small LoRA adapters reviewable; ignore full model checkpoints.
 weights/*
@@ -30,3 +37,5 @@ tensorboard/
 events.out.tfevents.*
 tmp/
 temp/
+.venv312/
+notebook/unsloth_compiled_cache/
