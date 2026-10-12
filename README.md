@@ -1,11 +1,14 @@
 # Manga Task (Advanced)
 
-## Project setup
+A multimodal manga dialogue extraction system built with **Qwen3.5-4B Vision**. Given three manga pages, the fine-tuned model identifies dialogue, narration, sound effects, and speakers, then returns the result as structured JSON.
 
-The project targets Python 3.11 because it is supported by the pinned PyTorch,
-Transformers, and Qwen2.5-VL dependencies on both machines in scope.
-`transformers==4.49.0` is pinned to keep the Qwen2.5-VL interfaces stable for
-this scaffold.
+## Approach
+
+- Three-page sequences are kept together during preparation and split at the sequence level.
+- Qwen3.5-4B Vision receives the three images and a shared extraction prompt.
+- The model is adapted with 4-bit QLoRA/LoRA rather than trained from scratch. Lightweight adapter layers learn the manga-specific output format while the base model remains mostly frozen.
+- Supervised fine-tuning targets JSON containing three page lists, with each line represented by a `speaker` and `text` field.
+- Generated responses are parsed and schema-validated before evaluation or display.
 
 ### CUDA machine
 
@@ -23,11 +26,11 @@ the MPS backend when available.
 ## Folder overview
 
 - `configs/`: base and machine profiles.
-- `data/`: committed split placeholder; the future generated split goes here.
-- `src/`: configuration, environment, preparation, training, inference, and evaluation entry points.
-- `dataset/`: official downloaded dataset, intentionally gitignored.
-- `logs/`, `results/`, `weights/`: future deliverables and artifacts.
-- `docs/`: AI-use and citation records.
+- `data/`: reproducible sequence split metadata.
+- `src/`: preparation, configuration, inference, evaluation, and post-processing.
+- `weights/`: LoRA adapter configuration; large adapter weights are distributed separately.
+- `docs/`: AI-use and external-resource records.
+- `app_gradio.py`: optional local Gradio interface for exactly three pages.
 
 ## Optional GUI
 
@@ -43,10 +46,19 @@ The GUI loads the cached 4-bit base model and adapter at startup. Close notebook
 
 For a CPU-only UI smoke test that does not load the model, run `.venv312\Scripts\python.exe app_gradio.py --no-model`.
 
-## TODO
+## Setup
 
-- Inspect the supplied dataset schema.
-- Implement sequence-level preparation.
-- Train and evaluate an adapted local model.
-- Add the final approach, experiments, results, and next steps in this README.
-- Add base-versus-fine-tuned comparison notebook and review its outputs.
+The project was developed and tested with Python 3.12, CUDA PyTorch, Transformers, TRL, PEFT, bitsandbytes, and Unsloth.
+
+```powershell
+py -3.12 -m venv .venv312
+uv pip install --python .venv312\Scripts\python.exe --index-url https://download.pytorch.org/whl/cu128 torch==2.8.0 torchvision==0.23.0
+uv pip install --python .venv312\Scripts\python.exe -r requirements-train.lock.txt
+python -m src.check_env
+```
+
+The base model and processor must be available locally because inference uses offline loading. The training workflow is documented in `notebook/train_qwen35_4b.ipynb`.
+
+## Reproducibility and references
+
+Experiment settings, model revisions, environment details, and external resources are recorded in [`docs/CITATIONS.md`](docs/CITATIONS.md). AI-assisted project contributions are documented in [`docs/AI_USAGE.md`](docs/AI_USAGE.md).
