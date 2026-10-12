@@ -19,16 +19,9 @@ uv pip install --index-url https://download.pytorch.org/whl/cu124 -r requirement
 python -m src.check_env
 ```
 
-### Mac Apple Silicon
-
-```bash
-uv venv --python 3.11
-source .venv/bin/activate
-uv pip install -r requirements-mac.txt
-python -m src.check_env
-```
-
-The pinned dependencies are recorded in `requirements-train.lock.txt`.
+All package versions are pinned in the two requirements files. The CUDA file
+uses the PyTorch cu124 wheel index; the Mac file uses the standard index and
+the MPS backend when available.
 
 ## Folder overview
 
